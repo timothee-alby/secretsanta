@@ -2,6 +2,7 @@
 <html>
   <body>
     <script type='text/javascript'>
+BASE_URL = 'https://timothee-alby.github.io/secretsanta/';
 // ugly way to get the params. Probably unsafe
 function getSearchParameters() {
   function transformToAssocArray( prmstr ) {
@@ -37,8 +38,8 @@ function shuffle(array) {
 
 function createLink(gifter, giftees) {
   var line = '';
-  line = 'http://timothee.alby.fr/secretsanta?';
-  line += 'name=' + encodeURIComponent(gifter);
+  line = BASE_URL;
+  line += '?name=' + encodeURIComponent(gifter);
   line += '&gifter=' + encodeURIComponent(btoa(gifter));
   for(var i = 0; i < giftees.length; i++){
     line += '&giftees[]=' + encodeURIComponent(btoa(giftees[i]));
