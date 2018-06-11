@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script type='text/javascript'>
+// ugly way to get the params. Probably unsafe
+function getSearchParameters() {
+  function transformToAssocArray( prmstr ) {
+    var params = {};
+    var prmarr = prmstr.split("&");
+    for ( var i = 0; i < prmarr.length; i++) {
+      var tmparr = prmarr[i].split("=");
+      var key = tmparr[0];
+      var val = tmparr[1];
+      key = key.replace(/\[\d+\]$/, '[]') // fix messenger bug
+      if(key.substr(-2) == '[]') {
+        key = key.substr(0, key.length - 2);
+        params[key] = params[key] || [];
+        params[key].push(decodeURIComponent(val));
+      } else {
+        params[key] = decodeURIComponent(val);
+      }
+    }
+    return params;
+  }
+  var prmstr = window.location.search.substr(1);
+  return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+}
+
+function arraySentence(list) {
+  if(list.length == 1) return list[0];
+  var last = list.pop();
+  return list.join(', ') + ' et ' + last;
+}
+
+var params = getSearchParameters();
+
+gifter = atob(params.gifter);
+
+if(gifter != params.name) {
+  alert('Petit malin! Mais non.');
+}
+
+var giftees = params.giftees;
+for(var i = 0; i < giftees.length; i++){
+  giftees[i] = atob(giftees[i]);
+}
+
+var toWrite = '<h1>';
+toWrite += gifter;
+toWrite += ', tu vas faire un cadeau a ';
+toWrite += arraySentence(giftees);
+toWrite += '</h1>';
+
+document.write(toWrite);
+    </script>
+  </body>
+</html>

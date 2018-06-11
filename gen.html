@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script type='text/javascript'>
+// ugly way to get the params. Probably unsafe
+function getSearchParameters() {
+  function transformToAssocArray( prmstr ) {
+    var params = {};
+    var prmarr = prmstr.split("&");
+    for ( var i = 0; i < prmarr.length; i++) {
+      var tmparr = prmarr[i].split("=");
+      params[tmparr[0]] = decodeURIComponent(tmparr[1]);
+    }
+    return params;
+  }
+  var prmstr = window.location.search.substr(1);
+  return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+}
+
+// quick Fisher–Yates shuffle
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex ;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+}
+
+function createLink(gifter, giftees) {
+  var line = '';
+  line = 'http://timothee.alby.fr/secretsanta?';
+  line += 'name=' + encodeURIComponent(gifter);
+  line += '&gifter=' + encodeURIComponent(btoa(gifter));
+  for(var i = 0; i < giftees.length; i++){
+    line += '&giftees[]=' + encodeURIComponent(btoa(giftees[i]));
+  }
+  return line;
+}
+
+function getGiftees(gifterIndex) {
+  var theGiftees = []
+  for(var i = 1; i <= nb_gifts; i++){
+    var newIndex = gifterIndex + i;
+    newIndex = (newIndex >= names.length) ? newIndex - names.length : newIndex;
+    theGiftees.push(names[newIndex]);
+  }
+  return theGiftees;
+}
+
+var params = getSearchParameters();
+var names = params.names.split(',')
+var nb_gifts = params.nb_gifts
+shuffle(names);
+
+var lines = [];
+for(var i = 0; i < names.length; i++){
+  var giftees = getGiftees(i)
+  lines.push(createLink(names[i], giftees));
+}
+shuffle(lines)
+document.write(lines.join("<br /><br />"));
+    </script>
+  </body>
+</html>
